@@ -16,3 +16,6 @@ jobs:
         with:
           node-version: "20"
       - run: node main-execute.js
+        env:
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}

@@ -33,7 +33,7 @@ export default {
     } else {
       return new Response("Invalid data", { status: 400 });
     }
-    url.searchParams.set("n", ncode(url.searchParams.get("n")));
+    if (url.searchParams.has("n")) url.searchParams.set("n", ncode(url.searchParams.get("n")));
     return new Response(url.toString());
   }
 }`,

@@ -1,9 +1,13 @@
 import { between, cutAfterFinish } from "./lib.js";
 
-const resp = await fetch(
-  "https://www.youtube.com/s/player/9135c2ab/player_ias.vflset/en_US/base.js"
+const resp1 = await fetch("https://www.youtube.com/watch?v=jNQXAC9IVRw");
+const playerHTML = await resp1.text();
+const playerURL = new URL(
+  between(playerHTML, `"jsUrl":"`, `"`),
+  "https://www.youtube.com"
 );
-const text = await resp.text();
+const resp2 = await fetch(playerURL.href);
+const text = await resp2.text();
 
 export const getDecipher = () => {
   const functionName = between(text, `a.set("alr","yes");c&&(c=`, `(`);

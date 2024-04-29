@@ -14,7 +14,17 @@ export const cutAfterFinish = (string) => {
 
   let counter = 0;
   let quote = undefined;
+  let escape = false;
   for (let i = 0; i < string.length; i++) {
+    if (escape) {
+      escape = false;
+      continue;
+    }
+    if (string[i] == "\\") {
+      escape = true;
+      continue;
+    }
+
     if (quote && string[i] == quote) {
       quote = undefined;
       continue;
@@ -23,14 +33,16 @@ export const cutAfterFinish = (string) => {
     }
 
     if (string[i] == open) {
+      // console.log("incrementing counter on", string.slice(i - 1, i + 2));
       counter++;
     } else if (string[i] == close) {
+      // console.log("decreasing counter on", string.slice(i - 1, i + 2));
       counter--;
     } else if (string[i] == '"') {
       quote = '"';
     } else if (string[i] == "'") {
       quote = "'";
-    } else if (string[i - 1] == "," && string[i] == "/") {
+    } else if (string[i - 1].match(/[,\n]/) && string[i] == "/") {
       quote = "/";
     }
     if (counter == 0) {

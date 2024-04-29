@@ -30,6 +30,8 @@ export const cutAfterFinish = (string) => {
       quote = '"';
     } else if (string[i] == "'") {
       quote = "'";
+    } else if (string[i - 1] == "," && string[i] == "/") {
+      quote = "/";
     }
     if (counter == 0) {
       return string.substring(0, i + 1);

@@ -42,7 +42,7 @@ export const cutAfterFinish = (string) => {
       quote = '"';
     } else if (string[i] == "'") {
       quote = "'";
-    } else if (string[i - 1].match(/[,\n]/) && string[i] == "/") {
+    } else if (string[i - 1].match(/[,\n[]/) && string[i] == "/") {
       quote = "/";
     }
     if (counter == 0) {

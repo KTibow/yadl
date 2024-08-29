@@ -22,17 +22,21 @@ const ${resourceName} = ${resourceData};
 ${functionData}
 }`;
 };
+const RE1 = /(\w+).length\|\|\w+\(""\)/;
 export const getNcode = () => {
-  let functionName = between(text, `(b=a.get("n"))&&(b=`, `(`);
-  if (functionName.includes("[")) {
-    const listName = functionName.split("[")[0];
-    functionName = between(text, `var ${listName}=[`, `]`);
+  let functionName;
+  if (!functionName && RE1.test(text)) {
+    functionName = RE1.exec(text)[1];
   }
+  if (!functionName) throw new Error("failed to find ncode function");
 
+  if (between(text, `var ${functionName}=[`, `]`)) {
+    functionName = between(text, `var ${functionName}=[`, `]`);
+  }
   const functionData = cutAfterFinish(
     text.split(`${functionName}=function(a)`)[1]
   );
   return `function(a) {
-${functionData}
-}`;
+  ${functionData}
+  }`;
 };

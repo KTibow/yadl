@@ -1,4 +1,5 @@
 export const between = (string, chop1, chop2) => {
+  if (string.indexOf(chop1) == -1) return "";
   string = string.slice(string.indexOf(chop1) + chop1.length);
   return string.slice(0, string.indexOf(chop2));
 };

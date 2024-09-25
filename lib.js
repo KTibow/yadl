@@ -5,10 +5,10 @@ export const between = (string, chop1, chop2) => {
 };
 export const cutAfterFinish = (string) => {
   let open, close;
-  if (string[0] == "[") {
+  if (string[0] === "[") {
     open = "[";
     close = "]";
-  } else if (string[0] == "{") {
+  } else if (string[0] === "{") {
     open = "{";
     close = "}";
   }
@@ -16,37 +16,53 @@ export const cutAfterFinish = (string) => {
   let counter = 0;
   let quote = undefined;
   let escape = false;
+  let inRegex = false;
+  let regexDepth = 0;
+
   for (let i = 0; i < string.length; i++) {
     if (escape) {
       escape = false;
       continue;
     }
-    if (string[i] == "\\") {
+    if (string[i] === "\\") {
       escape = true;
       continue;
     }
 
-    if (quote && string[i] == quote) {
+    if (quote && string[i] === quote) {
       quote = undefined;
       continue;
     } else if (quote) {
       continue;
     }
 
-    if (string[i] == open) {
-      // console.log("incrementing counter on", string.slice(i - 1, i + 2));
-      counter++;
-    } else if (string[i] == close) {
-      // console.log("decreasing counter on", string.slice(i - 1, i + 2));
-      counter--;
-    } else if (string[i] == '"') {
-      quote = '"';
-    } else if (string[i] == "'") {
-      quote = "'";
-    } else if (string[i - 1].match(/[,\n[]/) && string[i] == "/") {
-      quote = "/";
+    if (inRegex) {
+      if (string[i] === "[") {
+        regexDepth++;
+      } else if (string[i] === "]") {
+        if (regexDepth > 0) {
+          regexDepth--;
+        } else {
+          inRegex = false;
+        }
+      } else if (string[i] === "/" && regexDepth === 0) {
+        inRegex = false;
+      }
+      continue;
     }
-    if (counter == 0) {
+
+    if (string[i] === open) {
+      counter++;
+    } else if (string[i] === close) {
+      counter--;
+    } else if (string[i] === '"' || string[i] === "'") {
+      quote = string[i];
+    } else if (string[i] === "/" && i > 0 && string[i - 1].match(/[,\n[({]/)) {
+      inRegex = true;
+      regexDepth = 0;
+    }
+
+    if (counter === 0) {
       return string.substring(0, i + 1);
     }
   }

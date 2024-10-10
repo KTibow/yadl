@@ -24,6 +24,9 @@ ${functionData}
 };
 const RE1 = /(\w+).length\|\|\w+\(""\)/;
 export const getNcode = () => {
+  const fullFunction = text.match(/function\(a\){.+?enhanced_except.+?}.+?}/s)?.[0];
+  if (fullFunction) return fullFunction;
+
   let functionName;
   if (!functionName && RE1.test(text)) {
     functionName = RE1.exec(text)[1];

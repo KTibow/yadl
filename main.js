@@ -23,9 +23,18 @@ ${functionData}
 }`;
 };
 const RE1 = /(\w+).length\|\|\w+\(""\)/;
+const fastReverse = (str) => {
+  let newStr = "";
+  for (let i = str.length - 1; i >= 0; i--) {
+    newStr += str[i];
+  }
+  return newStr;
+}
 export const getNcode = () => {
-  const fullFunction = text.match(/function\(a\){.+?enhanced_except.+?}.+?}/s)?.[0];
-  if (fullFunction) return fullFunction;
+  const functionIndex = text.indexOf("enhanced_except");
+  const functionSpace = functionIndex != -1 && text.slice(functionIndex - 6000, functionIndex + 600);
+  const functionText = functionSpace && functionSpace.match(/function\(a\){var .+?enhanced_except.+?}.+?}/s);
+  if (functionText) return functionText[0];
 
   let functionName;
   if (!functionName && RE1.test(text)) {
@@ -43,3 +52,5 @@ export const getNcode = () => {
   ${functionData}
   }`;
 };
+console.log(`const decipher = ${getDecipher()};
+const ncode = ${getNcode()};`);

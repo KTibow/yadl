@@ -4,13 +4,20 @@ export const between = (string, chop1, chop2) => {
   return string.slice(0, string.indexOf(chop2));
 };
 export const cutAfterFinish = (string) => {
-  let open, close;
+  if (!string) {
+    return "";
+  }
+
+  // Skip to the first { or [
+  const start = string.indexOf("{");
+  if (start === -1) return "";
+  string = string.slice(start);
+
+  let open = "{",
+    close = "}";
   if (string[0] === "[") {
     open = "[";
     close = "]";
-  } else if (string[0] === "{") {
-    open = "{";
-    close = "}";
   }
 
   let counter = 0;

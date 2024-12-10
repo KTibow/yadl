@@ -1,11 +1,9 @@
 name: Deploy
 
 on:
-  schedule:
-    - cron: "0 * * * *"
-
-  push:
-
+#  schedule:
+#    - cron: "0 * * * *"
+#  push:
   workflow_dispatch:
 
 jobs:
